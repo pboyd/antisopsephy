@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/pboyd/antisopsephy/internal/isopsephy"
 	"github.com/pboyd/antisopsephy/internal/lgpn"
 )
 
@@ -22,8 +23,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	_ = number
-
 	names, err := lgpn.Names(context.Background())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to retrieve names: %v\n", err)
@@ -31,6 +30,13 @@ func main() {
 	}
 
 	for name := range names {
-		fmt.Println(name)
+		n, err := isopsephy.Calculate(name)
+		if err != nil {
+			continue
+		}
+
+		if n == number {
+			fmt.Println(name)
+		}
 	}
 }
